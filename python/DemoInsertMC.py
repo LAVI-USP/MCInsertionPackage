@@ -21,8 +21,8 @@ def insertMC(dcmData, maskMC, coords, contrast, angle):
     inserted[:] = dcmData
     
     # MC rotation
-    image_center = tuple(np.array(maskMC.shape) // 2)
-    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
+    image_center = tuple((int(maskMC.shape[0] // 2), int(maskMC.shape[1] // 2)))
+    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1)
     maskRot = cv2.warpAffine(maskMC, rot_mat, maskMC.shape, flags=cv2.INTER_CUBIC)
     
     # Normalize and aply contrast  
@@ -44,9 +44,9 @@ def insertMC(dcmData, maskMC, coords, contrast, angle):
 #%% This code is a demo illustrating the usage of InsertMC
 
 #Loads the raw mammogram
-dcmData = loadmat('Patient.mat')['Patient']
+dcmData = loadmat('../Patient.mat')['Patient']
 
-resLoad = loadmat('res.mat')['res']     # Loads the density and breast masks
+resLoad = loadmat('../res.mat')['res']     # Loads the density and breast masks
 res = dict()
 for dtype, value in zip(resLoad[0][0].dtype.names, resLoad[0][0]):
     res[dtype] = value
@@ -58,7 +58,7 @@ del resLoad
 # https://www.med.upenn.edu/sbia/libra.html
 
 # Loads the set of 11 segmented MC clusters
-maskMC = loadmat('MaskMC.mat')['MaskMC'] 
+maskMC = loadmat('../MaskMC.mat')['MaskMC'] 
 
 # Parameters
 contrast = 0.12                                 # Contrast of the MCs, e.g., 0.07 means 7# contrast
